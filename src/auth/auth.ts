@@ -26,4 +26,25 @@ export const adminAuth = (req: Request, res: Response, next: NextFunction) => {
             new Responder(res, 200, data)
             next()
         }
+}
+
+export const decryptJWT = (token: string) => {
+    try{
+        let decodedToken = jwt.verify(
+            token,
+            JWT_SECRET!
+        ) 
+        const data = {
+            error: false,
+            decoderToken: decodedToken
+        }
+        return data
+
+    }catch (err) {
+        const data = {
+            error: true,
+            decoderToken: {}
+        }
+        return data
     }
+}

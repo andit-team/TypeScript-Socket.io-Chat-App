@@ -16,5 +16,7 @@ export class UserRoute {
         this.router.post("/signup", this.userController.registerUser)
         this.router.post("/login", this.userController.loginUser)
         this.router.put("/update", adminAuth, this.userController.changeUser)
+        this.router.post("/verify-user", this.userController.verifyUsr)
+        this.router.get("/get-all-user", this.userController.getAllUser)
     }
 }

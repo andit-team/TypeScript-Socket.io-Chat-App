@@ -115,4 +115,70 @@ export class UserController {
       })
   }
 
+  public verifyUsr(req: Request, res: Response){
+    try{
+
+        const token = req.body.token
+        
+        let decodedToken: any = jwt.verify(
+            token,
+            JWT_SECRET!
+        ) 
+        
+        User.findById(decodedToken._id).then(result => {
+            if(result){
+
+                let data = {
+                    error: false,
+                    msg: "Successfully Verified Token",
+                    data: result
+                }
+                new Responder(res,200, data)
+
+            }else{
+                const data = {
+                    msg: "You are not authenticated",
+                    error:true
+                }
+                new Responder(res, 200, data)
+            }
+        })
+
+    }catch (err) {
+        const data = {
+            msg: "You are not authenticated",
+            error:true
+        }
+        new Responder(res, 200, data)
+    }
+  }
+
+
+  public getAllUser(req: Request, res: Response){
+        User.find().then(result => {
+            if(result){
+
+                let data = {
+                    error: false,
+                    msg: "Successfully Get User",
+                    data: result
+                }
+                new Responder(res,200, data)
+
+            }else{
+                const data = {
+                    msg: "Problem in getting user",
+                    error:true
+                }
+                new Responder(res, 200, data)
+            }
+        }).catch(error => {
+            const data = {
+                msg: "Problem in getting user",
+                error:true
+            }
+            new Responder(res, 200, data)
+        })
+  }
+
 }
