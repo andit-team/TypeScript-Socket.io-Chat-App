@@ -7,11 +7,12 @@ import cors from 'cors'
 import path from 'path'
 import compression from 'compression'
 import helmet from 'helmet'
-import { MONGODB_URI , PORT } from './util/secrets'
+import { MONGODB_URI , PORT, JWT_SECRET } from './util/secrets'
 import { Api } from './routes/api'
 import { createServer } from "http"
 import { Server } from "socket.io"
 import {SocketFunction} from './socket/socket'
+import * as jwt from "jsonwebtoken"
 class App {
     public app: Application
     public httpServer: any
@@ -95,6 +96,14 @@ class App {
           origin: '*',
           credentials: true
         }
+      })
+      io.use((socket: any, next) => {
+        try {
+          const token = socket.handshake.query.token
+          const payload: any = jwt.verify(token, JWT_SECRET!)
+          socket.userId = payload.id
+          next()
+        } catch (err) {}
       })
       let sockerFunction: SocketFunction = new SocketFunction()
       sockerFunction.socket(io)
