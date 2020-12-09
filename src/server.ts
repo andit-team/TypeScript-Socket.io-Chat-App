@@ -13,7 +13,16 @@ import { createServer } from "http"
 import { Server } from "socket.io"
 import {SocketFunction} from './socket/socket'
 import * as jwt from "jsonwebtoken"
+import { NextFunction, Request, Response } from "express"
+declare global {
+  namespace Express {
+    interface Request {
+      io: Server
+    }
+  }
+}
 class App {
+  
     public app: Application
     public httpServer: any
     constructor(){
@@ -22,7 +31,7 @@ class App {
         this.config()
         this.routes()
         this.mongo()
-        this.socket()
+        //this.socket()
     }
 
     public routes(): void {
@@ -55,6 +64,27 @@ class App {
         }) 
 
         this.app.use(cors()) 
+        // These are for socket config--------------------
+        const io = new Server(this.httpServer, {
+          cors: {
+            origin: '*',
+            credentials: true
+          }
+        })
+        this.app.use( function(req, res, next){
+          req.io = io
+          next()
+        })
+        io.use((socket: any, next) => {
+          try {
+            const token = socket.handshake.query.token
+            const payload: any = jwt.verify(token, JWT_SECRET!)
+            socket.userId = payload._id
+            next()
+          } catch (err) {}
+        })
+        let sockerFunction: SocketFunction = new SocketFunction()
+        sockerFunction.socket(io)
     }
 
     private mongo() {
@@ -84,29 +114,11 @@ class App {
     
         const run = async () => {
           await mongoose.connect(MONGODB_URI!, {
-            autoReconnect: true, keepAlive: true, useNewUrlParser: true,
+            keepAlive: true, useNewUrlParser: true,
             useUnifiedTopology: true
           })
         }
         run().catch(error => console.error(error))
-    }
-    public socket(): void{
-      const io = new Server(this.httpServer, {
-        cors: {
-          origin: '*',
-          credentials: true
-        }
-      })
-      io.use((socket: any, next) => {
-        try {
-          const token = socket.handshake.query.token
-          const payload: any = jwt.verify(token, JWT_SECRET!)
-          socket.userId = payload.id
-          next()
-        } catch (err) {}
-      })
-      let sockerFunction: SocketFunction = new SocketFunction()
-      sockerFunction.socket(io)
     }
     public start(): void {
         this.httpServer.listen(PORT, () => {

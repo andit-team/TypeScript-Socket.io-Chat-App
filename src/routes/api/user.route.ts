@@ -21,5 +21,6 @@ export class UserRoute {
         this.router.get("/get-all-user", this.userController.getAllUser)
 
         this.router.get("/messages", Auth, this.messageController.getAllMessage)
+        this.router.post("/message", Auth, this.messageController.sendMessage)
     }
 }

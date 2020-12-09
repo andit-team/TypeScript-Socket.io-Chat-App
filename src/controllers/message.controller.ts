@@ -4,6 +4,30 @@ import {Responder} from '../responder/responder'
 
 export class MessageController {
 
+  public sendMessage( req: Request, res: Response){
+    Message.create({
+      message: req.body.message,
+      reciver: req.body.reciver,
+      sender: res.locals.user._id
+    }).then( result => {
+      let data = {
+        error: false,
+        msg: "Message sent successfully",
+        data : result
+    }
+    console.log(req.io)
+    req.io.to(req.body.reciver).emit('message-recieve', data)
+    new Responder(res,200,data)
+    }).catch(error => {
+      console.log(error)
+      let data = {
+        error: true,
+        msg: "Messge send Unsuccessful",
+    }
+    new Responder(res,200,data)
+    })
+  }
+
   public getAllMessage(req: Request, res: Response){
       Message.find({
           $or: [
