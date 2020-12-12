@@ -28,9 +28,9 @@ class App {
         this.app = express()
         this.httpServer = createServer(this.app)
         this.config()
-        this.routes()
         this.mongo()
-        //this.socket()
+        this.socket()
+        this.routes()
     }
 
     public routes(): void {
@@ -62,28 +62,7 @@ class App {
             next() 
         }) 
 
-        this.app.use(cors()) 
-        // These are for socket config--------------------
-        const io = new Server(this.httpServer, {
-          cors: {
-            origin: '*',
-            credentials: true
-          }
-        })
-        this.app.use( function(req, res, next){
-          req.io = io
-          next()
-        })
-        io.use((socket: any, next) => {
-          try {
-            const token = socket.handshake.query.token
-            const payload: any = jwt.verify(token, JWT_SECRET!)
-            socket.userId = payload._id
-            next()
-          } catch (err) {}
-        })
-        let sockerFunction: SocketFunction = new SocketFunction()
-        sockerFunction.socket(io)
+        this.app.use(cors())
     }
 
     private mongo() {
@@ -119,6 +98,32 @@ class App {
         }
         run().catch(error => console.error(error))
     }
+    // These are for socket config--------------------
+    public socket(): void {
+      
+      const io = new Server(this.httpServer, {
+        cors: {
+          origin: '*',
+          credentials: true
+        }
+      })
+      this.app.use( function(req, res, next){
+        req.io = io
+        next()
+      })
+      io.use((socket: any, next) => {
+        try {
+          const token = socket.handshake.query.token
+          const payload: any = jwt.verify(token, JWT_SECRET!)
+          socket.userId = payload._id
+          next()
+        } catch (err) {}
+      })
+      let sockerFunction: SocketFunction = new SocketFunction()
+      sockerFunction.socket(io)
+
+    }
+
     public start(): void {
         this.httpServer.listen(PORT, () => {
           console.log(

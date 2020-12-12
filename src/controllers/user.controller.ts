@@ -37,7 +37,7 @@ export class UserController {
 
         }
     }).catch(error => {
-
+        console.log(error)
         let data = {
             error: true,
             msg: "User Creation UnSuccessful",
