@@ -3,7 +3,7 @@ export class SocketFunction {
     public socket(io: Server) {
         io.on('connection', socket => { 
 
-            let userId = socket.userId
+            let userId = socket.userId.toString()
             socket.join(userId)
             console.log("Connected: " + userId)
 

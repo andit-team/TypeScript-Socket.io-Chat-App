@@ -13,6 +13,9 @@ export const userSchema: Schema = new Schema({
     unique: true
   },
   password: String,
+},
+{
+  timestamps: true
 })
 
 export const User: Model<UserInterface> = model<UserInterface>('User', userSchema)

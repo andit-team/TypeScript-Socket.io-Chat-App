@@ -16,6 +16,9 @@ export const messageSchema: Schema = new Schema({
         type: new Mongoose().Schema.Types.ObjectId,
         ref: 'User',
     },
+},
+{
+    timestamps: true
 })
 
 export const Message: Model<MessageInterface> = model<MessageInterface>('Message', messageSchema)

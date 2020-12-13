@@ -15,12 +15,12 @@ export class MessageController {
         msg: "Message sent successfully",
         data : result
     }
-    req.io.to(req.body.reciver).emit('message-recieve', data)
+    req.io.to(req.body.reciver.toString()).emit('message-recieve', data)
     new Responder(res,200,data)
     }).catch(error => {
       let data = {
         error: true,
-        msg: "Messge send Unsuccessful",
+        msg: "Message send Unsuccessful",
     }
     new Responder(res,200,data)
     })
