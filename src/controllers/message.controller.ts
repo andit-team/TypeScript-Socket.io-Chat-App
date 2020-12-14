@@ -1,5 +1,5 @@
-import { NextFunction, Request, Response } from "express"
-import { Message } from "../models/message.model"
+import { NextFunction, Request, Response } from 'express'
+import { Message } from '../models/message.model'
 import {Responder} from '../responder/responder'
 
 export class MessageController {
@@ -12,7 +12,7 @@ export class MessageController {
     }).then( result => {
       let data = {
         error: false,
-        msg: "Message sent successfully",
+        msg: 'Message sent successfully',
         data : result
     }
     req.io.to(req.body.reciver.toString()).emit('message-recieve', data)
@@ -20,7 +20,7 @@ export class MessageController {
     }).catch(error => {
       let data = {
         error: true,
-        msg: "Message send Unsuccessful",
+        msg: 'Message send Unsuccessful',
     }
     new Responder(res,200,data)
     })
@@ -40,21 +40,21 @@ export class MessageController {
           if(result.length > 0){
             let data = {
                 error: false,
-                msg: "Message Get successfully",
+                msg: 'Message Get successfully',
                 data : result
             }
             new Responder(res,200,data)
           }else{
             let data = {
                 error: true,
-                msg: "Messge Get Unsuccessful",
+                msg: 'Messge Get Unsuccessful',
             }
             new Responder(res,200,data)
           }
       }).catch( () => {
         let data = {
             error: true,
-            msg: "Messge Get Unsuccessful",
+            msg: 'Messge Get Unsuccessful',
         }
         new Responder(res,200,data)
       })

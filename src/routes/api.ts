@@ -1,5 +1,5 @@
-import { Router } from "express"
-import { UserRoute } from "./api/user.route"
+import { Router } from 'express'
+import { UserRoute } from './api/user.route'
 
 
 export class Api {
@@ -13,6 +13,6 @@ export class Api {
     }
 
     routes() {
-        this.router.use("/user", this.userRoute.router)
+        this.router.use('/user', this.userRoute.router)
     }
 }

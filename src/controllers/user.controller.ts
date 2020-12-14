@@ -1,8 +1,8 @@
-import bcrypt from "bcryptjs"
-import { NextFunction, Request, Response } from "express"
-import * as jwt from "jsonwebtoken"
-import { User } from "../models/user.model"
-import { JWT_SECRET } from "../util/secrets"
+import bcrypt from 'bcryptjs'
+import { NextFunction, Request, Response } from 'express'
+import * as jwt from 'jsonwebtoken'
+import { User } from '../models/user.model'
+import { JWT_SECRET } from '../util/secrets'
 import {Responder} from '../responder/responder'
 
 export class UserController {
@@ -22,7 +22,7 @@ export class UserController {
             let data = {
                 token: token,
                 error: false,
-                msg: "User Creation Successful",
+                msg: 'User Creation Successful',
                 data : result
             }
             new Responder(res,200,data)
@@ -31,7 +31,7 @@ export class UserController {
 
             let data = {
                 error: true,
-                msg: "User Creation UnSuccessful",
+                msg: 'User Creation UnSuccessful',
             }
             new Responder(res,200,data)
 
@@ -40,7 +40,7 @@ export class UserController {
         console.log(error)
         let data = {
             error: true,
-            msg: "User Creation UnSuccessful",
+            msg: 'User Creation UnSuccessful',
         }
         new Responder(res,200,data)
 
@@ -56,7 +56,7 @@ export class UserController {
             if(!user){
                 const data = {
                     error: true,
-                    msg: "User Not Found"
+                    msg: 'User Not Found'
                 }
                 new Responder(res, 200, data)
             }
@@ -67,16 +67,16 @@ export class UserController {
             if(!result){
                 const data = {
                     error: true,
-                    msg: "Password Not Matched"
+                    msg: 'Password Not Matched'
                 }
                 new Responder(res, 200, data)
             }
             const token = jwt.sign({_id: fetchAdmin._id}, JWT_SECRET!, {
-                expiresIn: "8h"
+                expiresIn: '8h'
             }) 
             const data = {
                 token: token,
-                msg: "Successfully Log in User",
+                msg: 'Successfully Log in User',
                 error:false
             }
             new Responder(res, 200, data)
@@ -84,7 +84,7 @@ export class UserController {
         .catch((err) => {
             const data = {
                 error: true,
-                msg: "User Log in Unsuccessful"
+                msg: 'User Log in Unsuccessful'
             }
             new Responder(res, 200, data)
         }) 
@@ -95,20 +95,20 @@ export class UserController {
       User.updateOne({_id: res.locals.user._id},{username: req.body.username}).then((user: { n: number }) => {
           if(user.n > 0){
             const data = {
-                msg: "Successfully Update UserName",
+                msg: 'Successfully Update UserName',
                 error:false
             }
             new Responder(res, 200, data)
           }else{
             const data = {
-                msg: "Problem in Updating UserName",
+                msg: 'Problem in Updating UserName',
                 error:true
             }
             new Responder(res, 200, data)
           }
       }).catch(() => {
         const data = {
-            msg: "Problem in Updating UserName",
+            msg: 'Problem in Updating UserName',
             error:true
         }
         new Responder(res, 200, data)
@@ -130,14 +130,14 @@ export class UserController {
 
                 let data = {
                     error: false,
-                    msg: "Successfully Verified Token",
+                    msg: 'Successfully Verified Token',
                     data: result
                 }
                 new Responder(res,200, data)
 
             }else{
                 const data = {
-                    msg: "You are not authenticated",
+                    msg: 'You are not authenticated',
                     error:true
                 }
                 new Responder(res, 200, data)
@@ -146,7 +146,7 @@ export class UserController {
 
     }catch (err) {
         const data = {
-            msg: "You are not authenticated",
+            msg: 'You are not authenticated',
             error:true
         }
         new Responder(res, 200, data)
@@ -160,21 +160,21 @@ export class UserController {
 
                 let data = {
                     error: false,
-                    msg: "Successfully Get User",
+                    msg: 'Successfully Get User',
                     data: result
                 }
                 new Responder(res,200, data)
 
             }else{
                 const data = {
-                    msg: "Problem in getting user",
+                    msg: 'Problem in getting user',
                     error:true
                 }
                 new Responder(res, 200, data)
             }
         }).catch(error => {
             const data = {
-                msg: "Problem in getting user",
+                msg: 'Problem in getting user',
                 error:true
             }
             new Responder(res, 200, data)
