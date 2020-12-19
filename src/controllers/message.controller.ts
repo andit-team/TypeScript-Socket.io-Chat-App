@@ -13,7 +13,7 @@ export class MessageController {
       let data = {
         error: false,
         msg: 'Message sent successfully',
-        data : result
+        data : result.populate('reciver').populate('sender')
     }
     req.io.to(req.body.reciver.toString()).emit('message-recieve', data)
     new Responder(res,200,data)
@@ -30,13 +30,13 @@ export class MessageController {
       Message.find({
           $or: [
               {
-                  sender: res.locals.user._id
+                sender: res.locals.user._id
               },
               {
                 reciver: res.locals.user_id
               }
           ]
-      }).then( result => {
+      }).populate('sender').populate('reciver').then( result => {
           if(result.length > 0){
             let data = {
                 error: false,
